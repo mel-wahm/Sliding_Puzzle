@@ -73,7 +73,7 @@ class Game(arcade.View):
 						140, 140)
 			self.rects.append(r)
 		if self.is_solved():
-			self.delay = 1
+			self.delay = 0.2
 			self.state = 1
 			return
 
