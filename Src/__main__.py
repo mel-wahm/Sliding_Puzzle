@@ -7,7 +7,7 @@ class Game(arcade.View):
 		self.font = arcade.load_font("Renogare-Regular.otf")
 		self.numbers = [1, 2, 3,
 				  		4, 5, 6,
-				  		7, 8, "*"]
+				  		7, "*", 8]
 		self.cx = self.width / 2 - 3 * 50
 		self.cy = self.height / 2 + 3 * 50
 		self.texts = []
@@ -29,6 +29,7 @@ class Game(arcade.View):
 			24, font_name="Renogare", anchor_x="center"
 		)
 		self.scroll = 0
+		self.delay = 0
 		self.start_game()
 
 	def start_game(self):
@@ -58,9 +59,6 @@ class Game(arcade.View):
 				valid = 1
 
 	def update_game(self):
-		if self.is_solved():
-			self.state = 1
-			return
 		self.texts = []
 		self.rects = []
 		for i, number in enumerate(self.numbers):
@@ -74,6 +72,10 @@ class Game(arcade.View):
 			r = arcade.rect.XYWH(self.cx + (i % 3) * 150, self.cy - (i // 3) * 150, 
 						140, 140)
 			self.rects.append(r)
+		if self.is_solved():
+			self.delay = 1
+			self.state = 1
+			return
 
 	def can_move(self, block):
 		idx = self.numbers.index("*")
@@ -100,8 +102,14 @@ class Game(arcade.View):
 		self.numbers[self.numbers.index(block)] = "*"
 		self.numbers[tmp] = swp
 		self.update_game()
-		
+
+	def on_update(self, delta_time):
+		if self.delay > 0:
+			self.delay = max(0, self.delay - delta_time)
+
 	def on_mouse_press(self, x, y, button, modifiers):
+		if self.delay:
+			return
 		for i, rec in enumerate(self.rects):
 			if rec.left  <= x <= rec.right  \
 				and rec.bottom <= y <= rec.top:
@@ -124,7 +132,7 @@ class Game(arcade.View):
 
 	def on_draw(self):
 		self.clear()
-		if not self.state:
+		if not self.state or self.delay:
 			for i in range(9):
 				arcade.draw_rect_filled(self.rects[i],
 				arcade.color.GRAY if not isinstance(self.numbers[i], str) else \
