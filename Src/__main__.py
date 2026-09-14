@@ -1,7 +1,10 @@
 import arcade
 import random
 
+
 class Game(arcade.View):
+	seed = 1
+	random.seed(seed)
 	def  __init__(self):
 		super().__init__()
 		self.font = arcade.load_font("Renogare-Regular.otf")
@@ -126,6 +129,8 @@ class Game(arcade.View):
 			if symbol == arcade.key.ENTER:
 				if not self.scroll:
 					self.state = 0
+					seed += 1
+					random.seed(seed)
 					self.start_game()
 				else:
 					self.window.close()
