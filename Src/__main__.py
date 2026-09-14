@@ -150,6 +150,8 @@ class Game(arcade.View):
 			if symbol == arcade.key.ENTER:
 				if not self.scroll:
 					self.state = 0
+					self.delta = 0
+					self.seconds = 0
 					global seed
 					seed += 1
 					random.seed(seed)
