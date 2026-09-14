@@ -98,6 +98,7 @@ class Game(arcade.View):
 	def is_solved(self):
 		if all(isinstance(n, int) for n in self.numbers[:-1]) and \
 			sorted(self.numbers[:-1]) == self.numbers[:-1]:
+			print(max(0, 100 - self.score))
 			return True
 		return False
 
@@ -120,7 +121,6 @@ class Game(arcade.View):
 				and rec.bottom <= y <= rec.top:
 					if self.can_move(self.numbers[i]):
 						self.score += 1
-						print(100 - self.score)
 						self.move(self.numbers[i])
 
 	def on_key_press(self, symbol, modifiers):
