@@ -2,10 +2,12 @@ import arcade
 import random
 
 
+seed = 2
+random.seed(seed)
+
 class Game(arcade.View):
-	seed = 1
-	random.seed(seed)
 	def  __init__(self):
+		self.score = 0
 		super().__init__()
 		self.font = arcade.load_font("Renogare-Regular.otf")
 		self.numbers = [1, 2, 3,
@@ -117,6 +119,8 @@ class Game(arcade.View):
 			if rec.left  <= x <= rec.right  \
 				and rec.bottom <= y <= rec.top:
 					if self.can_move(self.numbers[i]):
+						self.score += 1
+						print(100 - self.score)
 						self.move(self.numbers[i])
 
 	def on_key_press(self, symbol, modifiers):
@@ -129,6 +133,7 @@ class Game(arcade.View):
 			if symbol == arcade.key.ENTER:
 				if not self.scroll:
 					self.state = 0
+					global seed
 					seed += 1
 					random.seed(seed)
 					self.start_game()

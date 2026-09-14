@@ -1,4 +1,6 @@
+install:
+	@uv sync
 run:
-	@python3 -m Src
+	@uv run python -m Src
 clean:
 	@pyclean .
