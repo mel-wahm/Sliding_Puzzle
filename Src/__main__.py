@@ -2,7 +2,7 @@ import arcade
 import random
 
 
-seed = 2
+seed = 3
 random.seed(seed)
 
 class Game(arcade.View):
