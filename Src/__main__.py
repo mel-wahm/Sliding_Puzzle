@@ -7,6 +7,8 @@ random.seed(seed)
 
 class Game(arcade.View):
 	def  __init__(self):
+		self.seconds = 0
+		self.delta = 0
 		self.score = 0
 		super().__init__()
 		self.font = arcade.load_font("Renogare-Regular.otf")
@@ -28,6 +30,11 @@ class Game(arcade.View):
 			self.height / 2 - 50, arcade.color.YELLOW,
 			24, font_name="Renogare", anchor_x="center"
 		)
+		self.time_text = arcade.Text(
+			f"Time: {self.seconds}", 40,
+			self.height - 50, arcade.color.WHITE,
+			24, font_name="Renogare"
+				)
 		self.quit_text = arcade.Text(
 			"Quit", self.width / 2 + 80,
 			self.height / 2 - 50, arcade.color.WHITE,
@@ -64,6 +71,7 @@ class Game(arcade.View):
 				valid = 1
 
 	def update_game(self):
+
 		self.texts = []
 		self.rects = []
 		for i, number in enumerate(self.numbers):
@@ -110,6 +118,15 @@ class Game(arcade.View):
 		self.update_game()
 
 	def on_update(self, delta_time):
+		if not self.state:
+			self.delta += delta_time
+			if self.delta > 1:
+				self.delta = 0
+				self.seconds += 1
+				self.time_text.text = f"Time: {self.seconds}"
+		else:
+			self.time_text.text = f"Time: {self.seconds + self.delta:.2f}"
+
 		if self.delay > 0:
 			self.delay = max(0, self.delay - delta_time)
 
@@ -142,6 +159,7 @@ class Game(arcade.View):
 
 	def on_draw(self):
 		self.clear()
+		self.time_text.draw()
 		if not self.state or self.delay:
 			for i in range(9):
 				arcade.draw_rect_filled(self.rects[i],
@@ -149,6 +167,7 @@ class Game(arcade.View):
 					arcade.color.BLACK)
 				self.texts[i].draw()
 		else:
+			self.time_text.draw()
 			self.win_text.draw()
 			self.restart_text.draw()
 			self.quit_text.draw()
